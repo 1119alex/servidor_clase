@@ -1,12 +1,16 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:socket_io/socket_io.dart';
 
 void main() {
+  // Obtener puerto de las variables de entorno (Render lo asigna automáticamente)
+  final port = int.parse(Platform.environment['PORT'] ?? '3005');
+
   final server = Server();
 
   server.on('connection', (client) {
-    print('cliente conectado: $client');
+    print('cliente conectado: ${client.id}');
 
     client.on('stream', (data) {
       print('Data recibida del cliente: ${client.id} , $data');
@@ -18,10 +22,10 @@ void main() {
     });
 
     client.on('disconnect', (_) {
-      print('cliente desconectado');
+      print('cliente desconectado: ${client.id}');
     });
   });
 
-  server.listen(3005);
-  print('Servidor socket, escuchando en el puerto 3005');
+  server.listen(port);
+  print('🚀 Servidor socket escuchando en puerto $port');
 }
